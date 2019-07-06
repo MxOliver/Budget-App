@@ -5,8 +5,15 @@ module RandomData
         name = names.sample
     end
 
+    def self.random_word
+        letters = ('a'..'z').to_a
+        letters.shuffle!
+        letters[0,rand(6..12)].join
+    end
+
+
     def self.random_number
-        numbers = rand(35..6000)
+        numbers = rand(6000)
     end
 
     def self.random_expense
