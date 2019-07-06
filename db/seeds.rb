@@ -10,7 +10,7 @@ end
 
 users = User.all
 
-50.times do
+8.times do
     Expense.create!(
         user: users.sample,
         name: RandomData.random_expense,

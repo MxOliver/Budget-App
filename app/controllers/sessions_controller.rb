@@ -8,7 +8,7 @@ class SessionsController < ApplicationController
         if user && user.authenticate(params[:session][:password])
             create_session(user)
             flash[:notice] = "Welcome, #{user.username}!"
-            redirect_to root_path
+            redirect_to expenses_path
         else
             flash.now[:alert] = "Invalid username/password combination"
             render :new
