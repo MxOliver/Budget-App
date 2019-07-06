@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe User, type: :model do
   let(:user) { User.create!(username: "MxOliver", password: "password") }
 
+  it { is_expected.to have_many(:expenses) }
  
    # Shoulda tests for username
    it { is_expected.to validate_presence_of(:username) }
@@ -17,7 +18,7 @@ RSpec.describe User, type: :model do
  
    describe "attributes" do
      it "should have a username attribute" do
-       expect(user).to have_attributes(username: "MxOliver")
+       expect(user).to have_attributes(username: "mxoliver")
      end
    end
 

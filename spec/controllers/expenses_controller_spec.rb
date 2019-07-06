@@ -1,75 +1,145 @@
 require 'rails_helper'
 
+include SessionsHelper
+
 RSpec.describe ExpensesController, type: :controller do
 
-  let(:my_user) { User.create!(name: RandomData.random_name, total_income: RandomData.random_number)}
+  let(:my_user) { User.create!(username: RandomData.random_name, password: "password1234", total_income: RandomData.random_number)}
   let(:my_expense) { Expense.create!(name: RandomData.random_expense, planned_amount: RandomData.random_number, user: my_user)}
 
-  describe "GET #index" do
-    it "returns http success" do
-      get :index
-      expect(response).to have_http_status(:success)
+
+  context "signed-in user" do
+    before do
+      create_session(my_user)
     end
 
-    it "assigns [my_expense] to @expenses" do
-      get :index
-      expect(assigns(:expenses)).to eq([my_expense])
-    end
-  end
 
-  describe "GET #show" do
-    it "returns http success" do
-      get :show, params: { id: my_expense.id }
-      expect(response).to have_http_status(:success)
-    end
+    describe "GET #index" do
+      it "returns http success" do
+        get :index
+        expect(response).to have_http_status(:success)
+      end
 
-    it "renders the #show view" do
-      get :show, params: { id: my_expense.id }
-      expect(response).to render_template :show
+      it "assigns [my_expense] to @expenses" do
+        get :index
+        expect(assigns(:expenses)).to eq([my_expense])
+      end
     end
 
-    it "assigns my_expense to @expense" do
-      get :show, params: { id: my_expense.id }
-      expect(assigns(:expense)).to eq(my_expense)
+    describe "GET #show" do
+      it "returns http success" do
+        get :show, params: { id: my_expense.id }
+        expect(response).to have_http_status(:success)
+      end
+
+      it "renders the #show view" do
+        get :show, params: { id: my_expense.id }
+        expect(response).to render_template :show
+      end
+
+      it "assigns my_expense to @expense" do
+        get :show, params: { id: my_expense.id }
+        expect(assigns(:expense)).to eq(my_expense)
+      end
+
     end
 
-  end
+    describe "GET new" do
+      it "returns http success" do
+        get :new
+        expect(response).to have_http_status(:success)
+      end
 
-  describe "GET #new" do
-    it "returns http success" do
-      get :new
-      expect(response).to have_http_status(:success)
+      it "renders the #new view" do
+        get :new
+        expect(response).to render_template :new
+      end
+
+      it "instantiates @expense" do
+        get :new
+        expect(assigns(:expense)).not_to be_nil
+      end
+
     end
 
-    it "renders the #new view" do
-      get :new
-      expect(response).to render_template :new
+    describe "POST create" do
+      it "increases the expenses count by 1" do
+        expect{ post :create, params: { expense: {name: RandomData.random_expense, planned_amount: RandomData.random_number, user: my_user}}}.to change(Expense,:count).by(1)
+      end
+
+      it "assigns the new expense to @expense" do
+        post :create, params: { expense: {name: RandomData.random_expense, planned_amount: RandomData.random_number, user: my_user }}
+        expect(assigns(:expense)).to eq Expense.last
+      end
+
+      it "redirects to the index view" do
+        post :create, params: { expense: {name: RandomData.random_expense, planned_amount: RandomData.random_number, user: my_user }}
+        expect(response).to redirect_to expenses_path
+      end
+      
     end
 
-    it "instantiates @expense" do
-      get :new
-      expect(assigns(:expense)).not_to be_nil
+    describe "GET edit" do
+      it "returns http success" do
+        get :edit, params: { id: my_expense.id }
+        expect(response).to have_http_status(:success)
+      end
+
+      it "renders the #edit view" do
+        get :edit, params: { id: my_expense.id }
+        expect(response).to render_template :edit
+      end
+
+      it "assigns expense to be updated to @expense" do
+        get :edit, params: { id: my_expense.id }
+        expense_instance = assigns(:expense)
+
+        expect(expense_instance.id).to eq my_expense.id
+        expect(expense_instance.name).to eq my_expense.name
+        expect(expense_instance.planned_amount).to eq my_expense.planned_amount
+      end
     end
 
-  end
+    describe "PUT update" do
+      it "updates expense with expected attributes" do
+        new_name = RandomData.random_word
+        new_planned_amount = RandomData.random_number
+        new_actual_amount = RandomData.random_number
 
-  describe "POST #create" do
-    it "increases the expenses count by 1" do
-      expect{ post :create, params: { expense: {name: RandomData.random_expense, planned_amount: RandomData.random_number, user: my_user}}}.to change(Expense,:count).by(1)
+        put :update, params: { id: my_expense.id, expense: { name: new_name, planned_amount: new_planned_amount, actual_amount: new_actual_amount }}
+
+        updated_expense = assigns(:expense)
+        expect(updated_expense.id).to eq my_expense.id
+        expect(updated_expense.name).to eq new_name
+        expect(updated_expense.planned_amount).to eq new_planned_amount
+        expect(updated_expense.actual_amount).to eq new_actual_amount
+      end
+
+      it "redirects to the index" do
+        new_name = RandomData.random_word
+        new_planned_amount = RandomData.random_number
+        new_actual_amount = RandomData.random_number
+
+        put :update, params: { id: my_expense.id, expense: { name: new_name, planned_amount: new_planned_amount, actual_amount: new_actual_amount }}
+
+        expect(response).to redirect_to expenses_path
+      end
     end
 
-    it "assigns the new expense to @expense" do
-      post :create, params: { expense: {name: RandomData.random_expense, planned_amount: RandomData.random_number, user: my_user }}
-      expect(assigns(:expense)).to eq Expense.last
-    end
-    
-  end
+    describe "DELETE destroy" do
+      it "deletes the expense" do
+        delete :destroy, params: { id: my_expense.id }
 
-  # describe "GET #edit" do
-  #   it "returns http success" do
-  #     get :edit
-  #     expect(response).to have_http_status(:success)
-  #   end
-  # end
+        count = Expense.where({id: my_expense.id}).size
+        expect(count).to eq 0
+      end
+
+      it "redirects to expenses index" do
+        delete :destroy, params: { id: my_expense.id }
+        expect(response).to redirect_to expenses_path
+      end
+    end
+
+  end #signed in user context
 
 end

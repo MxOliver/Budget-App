@@ -7,6 +7,7 @@
             <th scope="col">Expense Catagory</th>
             <th scope="col">Planned Amount</th>
             <th scope="col">Actual Ammount</th>
+            <th scope="col">Edit/Delete</th>
         </tr>
         <% @expenses.each  do |expense| %>
             <tr>
@@ -20,6 +21,10 @@
 
                 <td>
                 <%= expense.actual_ammount %>
+                </td>
+
+                <td>
+                <%= link_to "Edit", edit_expense_path(expense), class: 'btn btn-warning' %>
                 </td>
             </tr>
         <% end %>
