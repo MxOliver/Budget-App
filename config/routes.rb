@@ -1,8 +1,10 @@
 Rails.application.routes.draw do
 
-  get 'budget/index'
-  
-  get 'budget/edit'
-  
+  resources :expenses
+
+  resources :users, only: [:new, :create]
+
+  resources :sessions, only: [:new, :create, :destroy]
+
   root 'budget#index'
 end

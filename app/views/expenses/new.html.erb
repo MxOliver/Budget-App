@@ -1,0 +1,26 @@
+<h1>New Expense Catagory</h1>
+
+<div class="row">
+    <div class="row">
+    <%= form_for @expense do |f| %>
+        <table class="table">
+        <tr>
+            <th scope="col">Expense Catagory</th>
+            <th scope="col">Planned Amount</th>
+            <th scope="col">Actual Ammount</th>
+        </tr>
+        <tr>
+            <td>
+            <%= f.text_field :name, class: 'form-control', placeholder: "expense catagory name" %>
+            </td>
+
+            <td>
+            <%= f.text_field :planned_amount, class: 'form-control', placeholder: "estimated budget" %>
+            </td>
+        </tr>
+        </table>
+
+        <%= f.submit "Save" class: 'btn btn-success' %>
+        <% end %>
+    </div>
+</div>
