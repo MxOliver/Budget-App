@@ -1,7 +1,7 @@
 module RandomData
 
     def self.random_name
-        names = ['Oliver', 'Marcus', 'Sid', 'Aubrey', 'Blue']
+        names = ['oliver', 'marcus', 'sid', 'aubrey', 'blue']
         name = names.sample
     end
 
