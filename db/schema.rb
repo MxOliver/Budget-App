@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_06_221744) do
+ActiveRecord::Schema.define(version: 2019_07_07_013331) do
 
   create_table "expenses", force: :cascade do |t|
     t.string "name"
@@ -19,7 +19,22 @@ ActiveRecord::Schema.define(version: 2019_07_06_221744) do
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "long_term_savings"
+    t.boolean "short_term_savings"
+    t.integer "total"
+    t.index ["long_term_savings"], name: "index_expenses_on_long_term_savings"
+    t.index ["short_term_savings"], name: "index_expenses_on_short_term_savings"
+    t.index ["total"], name: "index_expenses_on_total"
     t.index ["user_id"], name: "index_expenses_on_user_id"
+  end
+
+  create_table "savings", force: :cascade do |t|
+    t.boolean "long_term"
+    t.boolean "short_term"
+    t.integer "expense_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["expense_id"], name: "index_savings_on_expense_id"
   end
 
   create_table "users", force: :cascade do |t|

@@ -8,6 +8,8 @@
             <th scope="col">Expense Catagory</th>
             <th scope="col">Planned Amount</th>
             <th scope="col">Actual Ammount</th>
+            <th scope="col">Short Term Savings</th>
+            <th scope="col">Long Term Savings</th>
         </tr>
         <tr>
             <td>
@@ -17,10 +19,24 @@
             <td>
             <%= f.text_field :planned_amount, class: 'form-control', placeholder: "estimated budget" %>
             </td>
+
+            <td>
+            <%= f.text_field :actual_amount, class: 'form-control', placeholder: "amount spent", disabled: true %>
+            </td>
+
+            <td>
+            <%= f.check_box :short_term_savings, class: 'short-term-check' %>
+            </td>
+
+            <td>
+            <%= f.check_box :long_term_savings, class: 'long-term-check' %>
+            </td>
+
         </tr>
         </table>
 
         <%= f.submit "Save", class: 'btn btn-success' %>
         <% end %>
+        <%= link_to "Back", expenses_path, class: 'btn btn-warning' %>
     </div>
 </div>

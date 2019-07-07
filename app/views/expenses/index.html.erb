@@ -1,14 +1,16 @@
 <h1>Budget Planner</h1>
 
-<div class="container">
+<div class="row">
     
     <table class="table">
+        <thead class="thead-dark">
         <tr>
             <th scope="col">Expense Catagory</th>
             <th scope="col">Planned Amount</th>
             <th scope="col">Actual Ammount</th>
             <th scope="col">Edit/Delete</th>
         </tr>
+        </thead>
         <% @expenses.each  do |expense| %>
             <tr>
                 <td>
@@ -28,8 +30,21 @@
                 <%= link_to "Delete", expense, method: :delete, class: 'btn btn-danger', data: { confirm: 'Are you sure you want to delete this?'} %>
                 </td>
             </tr>
+            
         <% end %>
+                <tr>
+                <td></td>
+                <td>
+                    Total: <%= @expenses.sum(:planned_amount) %>
+                </td>
+                <td>
+                    Total: <%= @expenses.sum(:actual_amount) %>
+                </td>
+                <td></td>
+                </tr>
         </table>
-        <%= link_to "New Expense", new_expense_path, class: 'btn btn-success' %>
+
 </div>
+
+<%= link_to "New Expense", new_expense_path, class: 'btn btn-success' %>
 

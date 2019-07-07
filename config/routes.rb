@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
 
   resources :expenses
+  resources :savings
 
   resources :users, only: [:new, :create]
 

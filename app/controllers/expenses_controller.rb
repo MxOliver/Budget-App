@@ -1,6 +1,6 @@
 class ExpensesController < ApplicationController
 
-  before_action :require_sign_in, expect: :show
+  before_action :require_sign_in
 
   def index
     @expenses = Expense.all
@@ -61,7 +61,7 @@ class ExpensesController < ApplicationController
 
   private
   def expense_params
-    params.require(:expense).permit(:name, :planned_amount, :actual_amount)
+    params.require(:expense).permit(:name, :planned_amount, :actual_amount, :short_term_savings, :long_term_savings)
   end
 
 end
